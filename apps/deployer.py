@@ -21,8 +21,8 @@ class Deployer(hass.Hass):
     """
 
     def initialize(self):
-        self.register_service("appdaemon/update_automations", self.on_deploy)
-        self.log("Deployer ready — call service appdaemon.update_automations to deploy")
+        self.listen_state(self.on_deploy, "input_button.update_automations")
+        self.log("Deployer ready — press input_button.update_automations to deploy")
 
     def on_deploy(self, event_name, data, kwargs):
         self.log("Deploy triggered — pulling from GitHub...")
