@@ -24,7 +24,7 @@ class Deployer(hass.Hass):
         self.listen_state(self.on_deploy, "input_button.update_automations")
         self.log("Deployer ready — press input_button.update_automations to deploy")
 
-    def on_deploy(self, event_name, data, kwargs):
+    def on_deploy(self, entity, attribute, old, new, **kwargs):
         self.log("Deploy triggered — pulling from GitHub...")
         thread = threading.Thread(target=self._run, daemon=True)
         thread.start()
