@@ -1,0 +1,14 @@
+# Akami Home Automations
+# Each app is registered here. AppDaemon hot-reloads on file changes.
+
+lighting:
+  module: lighting
+  class: Lighting
+
+fans:
+  module: fans
+  class: Fans
+
+system:
+  module: system
+  class: System
