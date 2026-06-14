@@ -1,0 +1,5 @@
+appdaemon.yaml
+.env
+__pycache__/
+*.pyc
+logs/

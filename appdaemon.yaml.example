@@ -1,0 +1,20 @@
+appdaemon:
+  latitude: YOUR_LATITUDE
+  longitude: YOUR_LONGITUDE
+  elevation: YOUR_ELEVATION
+  time_zone: America/New_York
+  plugins:
+    HASS:
+      type: hass
+      ha_url: http://homeassistant.local:8123
+      token: YOUR_LONG_LIVED_ACCESS_TOKEN
+
+logs:
+  main_log:
+    filename: /tmp/appdaemon.log
+    log_level: INFO
+  error_log:
+    filename: /tmp/appdaemon_error.log
+
+http:
+  url: http://127.0.0.1:5050
