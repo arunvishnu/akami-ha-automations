@@ -1,6 +1,10 @@
 # Akami Home Automations
 # Each app is registered here. AppDaemon hot-reloads on file changes.
 
+deployer:
+  module: deployer
+  class: Deployer
+
 lighting:
   module: lighting
   class: Lighting
