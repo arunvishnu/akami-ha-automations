@@ -3,7 +3,7 @@ import urllib.request, zipfile, shutil, os
 url = "https://github.com/arunvishnu/akami-ha-automations/archive/refs/heads/deploy.zip"
 tmp_zip = "/tmp/automations_deploy.zip"
 tmp_dir = "/tmp/automations_deploy"
-dest = "/config/appdaemon/apps"
+dest = "/config/apps"
 
 print("Downloading...")
 urllib.request.urlretrieve(url, tmp_zip)
