@@ -3,8 +3,14 @@ import appdaemon.plugins.hass.hassapi as hass
 
 class System(hass.Hass):
     """
-    System-level automations (restarts, maintenance).
+    Automations:
+      - ha_daily_restart → 3:00 AM
     """
 
     def initialize(self):
+        self.run_daily(self.daily_restart, "03:00:00")
         self.log("System automations initialized")
+
+    def daily_restart(self, kwargs):
+        self.log("Initiating daily HA restart")
+        self.call_service("homeassistant/restart")

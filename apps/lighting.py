@@ -1,11 +1,89 @@
 import appdaemon.plugins.hass.hassapi as hass
 
 
+OUTDOOR_LIGHTS    = "light.outdoor"
+INTERIOR_LIGHTS   = "light.first_floor_interior"
+OFFICE_LIGHTS     = ["light.office", "light.office_front"]
+HOLIDAY_LIGHTS    = "switch.foyer_holiday_lights"
+
+
 class Lighting(hass.Hass):
     """
-    All lighting automations.
-    Automations will be added here once timing is confirmed.
+    Automations:
+      - turn_on_outdoor_lights          → sunset
+      - turn_off_outdoor_lights_at_11pm → 23:00
+      - turn_off_outdoor_lights_at_sunrise → sunrise
+      - turn_on_interior_lights         → sunset
+      - turn_off_interior_lights        → 22:00
+      - turn_on_office_lights           → 09:00 daily
+      - turn_off_office_lights          → 17:30 weekdays only
+      - holiday_lights_on               → sunset
+      - holiday_lights_off_at_11pm      → 23:00
     """
 
     def initialize(self):
+        # Outdoor
+        self.run_at_sunset(self.turn_on_outdoor)
+        self.run_daily(self.turn_off_outdoor_11pm, "23:00:00")
+        self.run_at_sunrise(self.turn_off_outdoor_sunrise)
+
+        # Interior
+        self.run_at_sunset(self.turn_on_interior)
+        self.run_daily(self.turn_off_interior, "22:00:00")
+
+        # Office
+        self.run_daily(self.turn_on_office, "09:00:00")
+        self.run_daily(self.turn_off_office, "17:30:00")
+
+        # Holiday
+        self.run_at_sunset(self.turn_on_holiday)
+        self.run_daily(self.turn_off_holiday_11pm, "23:00:00")
+
         self.log("Lighting automations initialized")
+
+    # ── Outdoor ───────────────────────────────────────────
+
+    def turn_on_outdoor(self, kwargs):
+        self.turn_on(OUTDOOR_LIGHTS)
+        self.log("Outdoor lights on (sunset)")
+
+    def turn_off_outdoor_11pm(self, kwargs):
+        self.turn_off(OUTDOOR_LIGHTS)
+        self.log("Outdoor lights off (11 PM)")
+
+    def turn_off_outdoor_sunrise(self, kwargs):
+        self.turn_off(OUTDOOR_LIGHTS)
+        self.log("Outdoor lights off (sunrise)")
+
+    # ── Interior ──────────────────────────────────────────
+
+    def turn_on_interior(self, kwargs):
+        self.turn_on(INTERIOR_LIGHTS)
+        self.log("Interior lights on (sunset)")
+
+    def turn_off_interior(self, kwargs):
+        self.turn_off(INTERIOR_LIGHTS)
+        self.log("Interior lights off (10 PM)")
+
+    # ── Office ────────────────────────────────────────────
+
+    def turn_on_office(self, kwargs):
+        for light in OFFICE_LIGHTS:
+            self.turn_on(light)
+        self.log("Office lights on (9 AM)")
+
+    def turn_off_office(self, kwargs):
+        if self.date().weekday() < 5:  # Mon–Fri
+            for light in OFFICE_LIGHTS:
+                self.turn_off(light)
+            self.log("Office lights off (5:30 PM weekday)")
+
+    # ── Holiday ───────────────────────────────────────────
+
+    def turn_on_holiday(self, kwargs):
+        self.call_service("switch/turn_on", entity_id=HOLIDAY_LIGHTS)
+        self.log("Holiday lights on (sunset)")
+
+    def turn_off_holiday_11pm(self, kwargs):
+        self.call_service("switch/turn_off", entity_id=HOLIDAY_LIGHTS)
+        self.log("Holiday lights off (11 PM)")
