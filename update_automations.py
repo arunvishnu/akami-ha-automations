@@ -15,6 +15,7 @@ with zipfile.ZipFile(tmp_zip) as z:
     z.extractall(tmp_dir)
 
 src = os.path.join(tmp_dir, os.listdir(tmp_dir)[0], "apps")
+os.makedirs(dest, exist_ok=True)
 for f in os.listdir(src):
     shutil.copy2(os.path.join(src, f), os.path.join(dest, f))
 
