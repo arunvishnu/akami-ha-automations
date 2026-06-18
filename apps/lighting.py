@@ -3,7 +3,6 @@ import appdaemon.plugins.hass.hassapi as hass
 
 OUTDOOR_LIGHTS    = "light.outdoor"
 INTERIOR_LIGHTS   = "light.first_floor_interior"
-OFFICE_LIGHTS     = ["light.office"]
 OFFICE_FRONT      = "light.office_front"
 HOLIDAY_LIGHTS    = "switch.foyer_holiday_lights"
 
@@ -16,8 +15,6 @@ class Lighting(hass.Hass):
       - turn_off_outdoor_lights_at_sunrise → sunrise
       - turn_on_interior_lights         → sunset
       - turn_off_interior_lights        → 22:00
-      - turn_on_office_lights           → 09:00 daily
-      - turn_off_office_lights          → 17:30 weekdays only
       - turn_on_office_front            → 09:00 Thu & Fri only
       - turn_off_office_front           → 17:15 Thu & Fri only
       - holiday_lights_on               → sunset
@@ -33,10 +30,6 @@ class Lighting(hass.Hass):
         # Interior
         self.run_at_sunset(self.turn_on_interior)
         self.run_daily(self.turn_off_interior, "22:00:00")
-
-        # Office
-        self.run_daily(self.turn_on_office, "09:00:00")
-        self.run_daily(self.turn_off_office, "17:30:00")
 
         # Office front — Thu & Fri only
         self.run_daily(self.turn_on_office_front, "09:00:00")
@@ -73,17 +66,6 @@ class Lighting(hass.Hass):
         self.log("Interior lights off (10 PM)")
 
     # ── Office ────────────────────────────────────────────
-
-    def turn_on_office(self, kwargs):
-        for light in OFFICE_LIGHTS:
-            self.turn_on(light)
-        self.log("Office lights on (9 AM)")
-
-    def turn_off_office(self, kwargs):
-        if self.date().weekday() < 5:  # Mon–Fri
-            for light in OFFICE_LIGHTS:
-                self.turn_off(light)
-            self.log("Office lights off (5:30 PM weekday)")
 
     def turn_on_office_front(self, kwargs):
         if self.date().weekday() in (3, 4):  # Thu, Fri
