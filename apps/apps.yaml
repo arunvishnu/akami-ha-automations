@@ -4,15 +4,3 @@
 deployer:
   module: deployer
   class: Deployer
-
-lighting:
-  module: lighting
-  class: Lighting
-
-fans:
-  module: fans
-  class: Fans
-
-system:
-  module: system
-  class: System
