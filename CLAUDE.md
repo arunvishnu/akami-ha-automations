@@ -34,18 +34,6 @@ The `update_automations.py` deploy script (on HA at `/tmp/update_automations.py`
 ### deployer.py
 Listens for `input_button.update_automations` state change. Downloads `deploy` branch zip from GitHub, copies all files except itself to `/config/apps/`. Never overwrites `deployer.py` mid-run to avoid reload loops. Fires `appdaemon_deploy_complete` event on finish.
 
-### lighting.py — `class Lighting`
-All lighting automations:
-- **Outdoor** (`light.outdoor`): on at sunset, off at 11 PM, off at sunrise
-- **Interior** (`light.first_floor_interior`): on at sunset, off at 10 PM
-- **Office** (`light.office`, `light.office_front`): on at 9 AM daily, off at 5:30 PM weekdays only
-- **Holiday** (`switch.foyer_holiday_lights`): on at sunset, off at 11 PM
-
-### fans.py — `class Fans`
-Master bath exhaust fan (`switch.master_bath_exhaust_fan_sonoff_1000987cf3`): auto-off 30 minutes after turning on. Cancels timer if turned off manually before 30 min.
-
-### system.py — `class System`
-Daily HA restart at 3:00 AM.
 
 ## Adding a new automation
 
